@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copa - FrontEnd</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .modal {
+            animation: modalPop 0.3s ease-out forwards;
+        }
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <div id="app" class="max-w-7xl mx-auto p-6">
+        <!-- Navbar -->
+        <nav class="flex justify-between items-center mb-8 border-b border-gray-700 pb-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center text-2xl">⚽</div>
+                <h1 class="text-3xl font-bold tracking-tight">Copa Simulator</h1>
+            </div>
+            <div class="flex gap-6 text-sm">
+                <button onclick="navigateTo('home')" class="hover:text-emerald-400 transition-colors">Seleções</button>
+                <button onclick="navigateTo('matches')" class="hover:text-emerald-400 transition-colors">Partidas</button>
+                <button onclick="navigateTo('players')" class="hover:text-emerald-400 transition-colors">Jogadores</button>
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <div id="content" class="min-h-[calc(100vh-120px)]"></div>
+    </div>
+
+    <!-- Player Modal -->
+    <div id="player-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+        <div class="modal bg-gray-800 rounded-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden">
+            <div class="p-6 border-b border-gray-700 flex justify-between items-center">
+                <h2 id="modal-title" class="text-2xl font-semibold"></h2>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white text-3xl leading-none">×</button>
+            </div>
+            <div id="modal-content" class="p-6 overflow-auto max-h-[70vh]"></div>
+        </div>
+    </div>
+
+    <!-- Scripts - ORDEM CORRETA: Services primeiro -->
+    <script src="Service/Selecao_serv.js"></script>
+    <script src="Service/Partidas_serv.js"></script>
+    
+    <script src="Controller/Selecao_cont.js"></script>
+    <script src="Controller/Jogadores_cont.js"></script>
+    <script src="Controller/Partidas_cont.js"></script>
+
+    <script>
+        let currentPage = 'home';
+
+        function navigateTo(page) {
+            currentPage = page;
+            renderCurrentPage();
+        }
+
+        function renderCurrentPage() {
+            const content = document.getElementById('content');
+            content.innerHTML = '';
+
+            if (currentPage === 'home') {
+                renderSelecoes();
+            } else if (currentPage === 'matches') {
+                renderPartidas();
+            } else if (currentPage === 'players') {
+                renderAllPlayers();
+            }
+        }
+
+        // Initial render
+        window.onload = () => {
+            renderCurrentPage();
+        };
+    </script>
+</body>
+</html>
